@@ -44,7 +44,7 @@ public class FilmResource {
 //                .collect(Collectors.joining("\n"));
 //    }
     @GET
-    @Path("/pagedFilms/{page}/{minLength}")
+    @Path(value = "/pagedFilms/{page}/{minLength}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<String, Object>> paged(long page, short minLength) {
         return filmRepository.paged(page, minLength)
@@ -58,7 +58,7 @@ public class FilmResource {
     }
 
     @GET
-    @Path("/actors/{startsWith}/{minLength}")
+    @Path(value = "/actors/{startsWith}/{minLength}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<String, Object>> actors(String startsWith, short minLength) {
         return filmRepository.actors(startsWith, minLength)
@@ -75,7 +75,7 @@ public class FilmResource {
     }
 
     @GET
-    @Path("/update/{minLength}/{rentalRate}")
+    @Path(value = "/update/{minLength}/{rentalRate}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<String, Object>> update(short minLength, Float rentalRate) {
         filmRepository.updateRentalRate(minLength, rentalRate);
