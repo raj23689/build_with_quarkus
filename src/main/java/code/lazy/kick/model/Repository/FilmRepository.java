@@ -6,6 +6,7 @@ import com.speedment.jpastreamer.application.JPAStreamer;
 import com.speedment.jpastreamer.streamconfiguration.StreamConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,6 +29,12 @@ public class FilmRepository {
                 .findFirst();
     }
 
+    public Stream<Film> getFilms(short minLength) {
+        return jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .sorted(Film$.length);
+    }
+
     public Stream<Film> paged(long page, short minLength) {
         return jpaStreamer.stream(Film.class)
                 .filter(Film$.length.greaterThan(minLength))
@@ -43,4 +50,15 @@ public class FilmRepository {
                 .filter(Film$.title.startsWith(startsWith).and(Film$.length.greaterThan(minLength)))
                 .sorted(Film$.length.reversed());
     }
+
+    @Transactional
+    public void updateRentalRate(short minLength, Float rentalRate) {
+        jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .forEach(f -> {
+                    f.setRentalRate(rentalRate);
+                });
+    }
+
+
 }

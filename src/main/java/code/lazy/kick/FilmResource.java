@@ -74,5 +74,20 @@ public class FilmResource {
                 .collect(Collectors.toList());
     }
 
+    @GET
+    @Path("/update/{minLength}/{rentalRate}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Map<String, Object>> update(short minLength, Float rentalRate) {
+        filmRepository.updateRentalRate(minLength, rentalRate);
+        return filmRepository.getFilms(minLength)
+                .map(f -> {
+                    Map<String, Object> filmMap = new HashMap<>();
+                    filmMap.put("title", f.getTitle());
+                    filmMap.put("length", f.getLength());
+                    filmMap.put("rentalRate", f.getRentalRate());
+                    return filmMap;
+                })
+                .collect(Collectors.toList());
+    }
 
 }
