@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 
 @QuarkusTest
 public class FilmResourceTest {
@@ -24,4 +25,15 @@ public class FilmResourceTest {
                 .statusCode(200)
                 .body(containsString("CONSPIRACY SPIRIT"));
     }
+
+
+    @Test
+    public void filmByLengthTest() {
+        given()
+                .when().get("/pagedFilms/6/60")
+                .then()
+                .statusCode(200)
+                .body("$", hasSize(20));
+    }
+
 }

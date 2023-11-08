@@ -8,6 +8,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,12 +35,26 @@ public class FilmResource {
         return film.isPresent() ? film.get().getTitle() : "No film was found!";
     }
 
+//    @GET
+//    @Path("/pagedFilms/{page}/{minLength}")
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public String paged(long page, short minLength) {
+//        return filmRepository.paged(page, minLength)
+//                .map(f -> String.format("%s (%d min)", f.getTitle(), f.getLength()))
+//                .collect(Collectors.joining("\n"));
+//    }
     @GET
     @Path("/pagedFilms/{page}/{minLength}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String paged(long page, short minLength) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Map<String, Object>> paged(long page, short minLength) {
         return filmRepository.paged(page, minLength)
-                .map(f -> String.format("%s (%d min)", f.getTitle(), f.getLength()))
-                .collect(Collectors.joining("\n"));
+                .map(f -> {
+                    Map<String, Object> filmMap = new HashMap<>();
+                    filmMap.put("title", f.getTitle());
+                    filmMap.put("length", f.getLength());
+                    return filmMap;
+                })
+                .collect(Collectors.toList());
     }
+
 }
