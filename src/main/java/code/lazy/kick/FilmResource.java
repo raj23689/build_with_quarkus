@@ -57,4 +57,22 @@ public class FilmResource {
                 .collect(Collectors.toList());
     }
 
+    @GET
+    @Path("/actors/{startsWith}/{minLength}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Map<String, Object>> actors(String startsWith, short minLength) {
+        return filmRepository.actors(startsWith, minLength)
+                .map(f -> {
+                    Map<String, Object> filmMap = new HashMap<>();
+                    filmMap.put("title", f.getTitle());
+                    filmMap.put("length", f.getLength());
+                    filmMap.put("actors", f.getActors().stream()
+                            .map(a -> String.format("%s %s", a.getFirstName(), a.getLastName()))
+                            .collect(Collectors.toList()));
+                    return filmMap;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -3,6 +3,7 @@ package code.lazy.kick.model.Repository;
 import code.lazy.kick.model.Film;
 import code.lazy.kick.model.Film$;
 import com.speedment.jpastreamer.application.JPAStreamer;
+import com.speedment.jpastreamer.streamconfiguration.StreamConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -33,5 +34,13 @@ public class FilmRepository {
                 .sorted(Film$.length)
                 .skip(page * PAGE_SIZE)
                 .limit(PAGE_SIZE);
+    }
+
+    public Stream<Film> actors(String startsWith, short minLength) {
+        final StreamConfiguration<Film> sc =
+                StreamConfiguration.of(Film.class).joining(Film$.actors);
+        return jpaStreamer.stream(sc)
+                .filter(Film$.title.startsWith(startsWith).and(Film$.length.greaterThan(minLength)))
+                .sorted(Film$.length.reversed());
     }
 }
