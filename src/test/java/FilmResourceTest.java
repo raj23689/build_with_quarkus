@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.containsString;
 public class FilmResourceTest {
 
     @Test
-    public void filmTestById() {
+    public void filmByIdTest() {
         given()
                 .when().get("/film/1")
                 .then()
